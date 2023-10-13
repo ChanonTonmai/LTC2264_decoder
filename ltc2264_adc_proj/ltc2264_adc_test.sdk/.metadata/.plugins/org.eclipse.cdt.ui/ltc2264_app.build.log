@@ -1,0 +1,25 @@
+11:00:16 **** Incremental Build of configuration Debug for project ltc2264_app ****
+make all 
+C:/Xilinx/Vitis/2020.1/gnuwin/bin/make --no-print-directory pre-build
+a9-linaro-pre-build-step
+' '
+C:/Xilinx/Vitis/2020.1/gnuwin/bin/make --no-print-directory main-build
+'Building file: ../src/helloworld.c'
+'Invoking: ARM v7 gcc compiler'
+arm-none-eabi-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/helloworld.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -ID:/fpga_work/ltc2264_adc_test/ltc2264_adc_test.sdk/ltc2264_plat/export/ltc2264_plat/sw/ltc2264_plat/standalone_domain/bspinclude/include -MMD -MP -MF"src/helloworld.d" -MT"src/helloworld.o" -o "src/helloworld.o" "../src/helloworld.c"
+'Finished building: ../src/helloworld.c'
+' '
+'Building target: ltc2264_app.elf'
+'Invoking: ARM v7 gcc linker'
+arm-none-eabi-gcc -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id=none -specs=Xilinx.spec -Wl,-T -Wl,../src/lscript.ld -LD:/fpga_work/ltc2264_adc_test/ltc2264_adc_test.sdk/ltc2264_plat/export/ltc2264_plat/sw/ltc2264_plat/standalone_domain/bsplib/lib -o "ltc2264_app.elf"  ./src/helloworld.o ./src/platform.o   -Wl,--start-group,-lxil,-lgcc,-lc,--end-group
+'Finished building target: ltc2264_app.elf'
+' '
+'Invoking: ARM v7 Print Size'
+arm-none-eabi-size ltc2264_app.elf  |tee "ltc2264_app.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+  27080	   1192	  22696	  50968	   c718	ltc2264_app.elf
+'Finished building: ltc2264_app.elf.size'
+' '
+
+11:00:19 Build Finished (took 3s.437ms)
+

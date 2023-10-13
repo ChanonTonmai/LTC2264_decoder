@@ -1,0 +1,67 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"0.940466",
+   "Default View_TopLeft":"-131,-21",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.0r6  2020-01-29 bk=1.5227 VDI=41 GEI=36 GUI=JA:9.0 non-TLS
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -lvl 6 -x 2060 -y 60 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -lvl 6 -x 2060 -y 90 -defaultsOSRD
+preplace port DCLK_p -pg 1 -lvl 0 -x -20 -y 640 -defaultsOSRD
+preplace port DCLK_n -pg 1 -lvl 0 -x -20 -y 670 -defaultsOSRD
+preplace port FCLK_p -pg 1 -lvl 0 -x -20 -y 700 -defaultsOSRD
+preplace port FCLK_n -pg 1 -lvl 0 -x -20 -y 730 -defaultsOSRD
+preplace port Data1_p -pg 1 -lvl 0 -x -20 -y 760 -defaultsOSRD
+preplace port Data1_n -pg 1 -lvl 0 -x -20 -y 790 -defaultsOSRD
+preplace port ADC_SDI -pg 1 -lvl 6 -x 2060 -y 310 -defaultsOSRD
+preplace port ADC_SCK -pg 1 -lvl 6 -x 2060 -y 340 -defaultsOSRD
+preplace port ADC_SDO -pg 1 -lvl 0 -x -20 -y 450 -defaultsOSRD
+preplace port ADC_CLK -pg 1 -lvl 6 -x 2060 -y 440 -defaultsOSRD
+preplace portBus ADC_CS -pg 1 -lvl 6 -x 2060 -y 370 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 1 -x 220 -y 120 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 3 -x 1270 -y 530 -defaultsOSRD
+preplace inst ps7_0_axi_periph -pg 1 -lvl 2 -x 750 -y 310 -defaultsOSRD
+preplace inst rst_ps7_0_200M -pg 1 -lvl 1 -x 220 -y 570 -defaultsOSRD
+preplace inst ila_0 -pg 1 -lvl 5 -x 1930 -y 550 -defaultsOSRD
+preplace inst axi_quad_spi_0 -pg 1 -lvl 3 -x 1270 -y 330 -defaultsOSRD
+preplace inst rst_ps7_0_50M -pg 1 -lvl 1 -x 220 -y 350 -defaultsOSRD
+preplace inst clk_wiz_0 -pg 1 -lvl 5 -x 1930 -y 780 -defaultsOSRD -resize 153 88
+preplace inst adcDecodeLVDS_0 -pg 1 -lvl 4 -x 1620 -y 750 -defaultsOSRD
+preplace netloc DCLK_p_0_1 1 0 4 20J 670 NJ 670 NJ 670 1410J
+preplace netloc DCLK_n_0_1 1 0 4 0J 680 NJ 680 NJ 680 NJ
+preplace netloc FCLK_p_0_1 1 0 4 NJ 700 NJ 700 NJ 700 NJ
+preplace netloc FCLK_n_0_1 1 0 4 NJ 730 NJ 730 NJ 730 1430J
+preplace netloc Data1_p_0_1 1 0 4 NJ 760 NJ 760 NJ 760 1450J
+preplace netloc Data1_n_0_1 1 0 4 NJ 790 NJ 790 NJ 790 1460J
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 5 10 470 440 470 930 450 1440 480 N
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 2 20 460 410
+preplace netloc rst_ps7_0_200M_peripheral_aresetn 1 1 2 450 550 NJ
+preplace netloc axi_gpio_0_gpio_io_o 1 3 2 1420 580 N
+preplace netloc adcDecodeLVDS_0_data14bit 1 4 1 1770 500n
+preplace netloc rst_ps7_0_50M_peripheral_aresetn 1 1 2 460 460 920
+preplace netloc axi_quad_spi_0_io0_o 1 3 3 1470J 310 NJ 310 NJ
+preplace netloc axi_quad_spi_0_sck_o 1 3 3 NJ 340 NJ 340 NJ
+preplace netloc axi_quad_spi_0_ss_o 1 3 3 NJ 360 NJ 360 2030J
+preplace netloc io0_i_0_1 1 0 4 0J 250 420J 170 NJ 170 1470
+preplace netloc rst_ps7_0_200M_peripheral_reset 1 1 3 420 660 NJ 660 1400J
+preplace netloc adcDecodeLVDS_0_data1_bufg_dbg 1 4 1 1780 520n
+preplace netloc adcDecodeLVDS_0_clk_par_dbg 1 4 1 1790 540n
+preplace netloc processing_system7_0_FCLK_CLK2 1 1 5 NJ 160 NJ 160 NJ 160 NJ 160 2040J
+preplace netloc adcDecodeLVDS_0_clk_ser_dbg 1 4 1 1820 560n
+preplace netloc M01_ACLK_1 1 0 3 30 450 430 450 910
+preplace netloc adcDecodeLVDS_0_bitslip_dbg 1 4 1 1810 600n
+preplace netloc adcDecodeLVDS_0_adone 1 4 1 1830 620n
+preplace netloc clk_wiz_0_clk_out1 1 3 3 1470 600 1800J 680 2030
+preplace netloc processing_system7_0_DDR 1 1 5 NJ 60 NJ 60 NJ 60 NJ 60 NJ
+preplace netloc processing_system7_0_FIXED_IO 1 1 5 430J 90 NJ 90 NJ 90 NJ 90 NJ
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 1 450 100n
+preplace netloc ps7_0_axi_periph_M00_AXI 1 2 1 890 300n
+preplace netloc ps7_0_axi_periph_M01_AXI 1 2 1 900 300n
+levelinfo -pg 1 -20 220 750 1270 1620 1930 2060
+pagesize -pg 1 -db -bbox -sgen -140 0 2190 1070
+"
+}
+{
+   "da_axi4_cnt":"2",
+   "da_ps7_cnt":"1"
+}

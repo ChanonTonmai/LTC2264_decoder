@@ -1,0 +1,7 @@
+/*ltc2264_plat*/
+the_ROM_image:
+{
+  [bootloader]<ltc2264_plat/boot/fsbl.elf>
+   <bitstream> 
+  <elf,ps7_cortexa9_0>
+}

@@ -1,0 +1,206 @@
+/******************************************************************************
+*
+* Copyright (C) 2009 - 2014 Xilinx, Inc.  All rights reserved.
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* Use of the Software is limited solely to applications:
+* (a) running on a Xilinx device, or
+* (b) that interact with a Xilinx device through a bus or interconnect.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+* XILINX  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+* WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+* OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*
+* Except as contained in this notice, the name of the Xilinx shall not be used
+* in advertising or otherwise to promote the sale, use or other dealings in
+* this Software without prior written authorization from Xilinx.
+*
+******************************************************************************/
+
+/*
+ * helloworld.c: simple test application
+ *
+ * This application configures UART 16550 to baud rate 9600.
+ * PS7 UART (Zynq) is not initialized by this application, since
+ * bootrom/bsp configures it to baud rate 115200
+ *
+ * ------------------------------------------------
+ * | UART TYPE   BAUD RATE                        |
+ * ------------------------------------------------
+ *   uartns550   9600
+ *   uartlite    Configurable only in HW design
+ *   ps7_uart    115200 (configured by bootrom/bsp)
+ */
+
+#include <stdio.h>
+#include "platform.h"
+#include "xil_printf.h"
+#include "xparameters.h"	/* XPAR parameters */
+#include "xspi.h"
+#include "xgpio.h"
+#include "xspi_l.h"
+
+#define SPI_DEVICE_ID	XPAR_AXI_QUAD_SPI_0_DEVICE_ID
+#define GPIO_EXAMPLE_DEVICE_ID  XPAR_GPIO_0_DEVICE_ID
+#define BUFFER_SIZE		2
+
+#define ADC_REG_A0      0x00
+#define REG0_RESET_BIT  7
+
+#define ADC_REG_A1          0x01
+#define REG1_DCSOFF_BIT     7
+#define REG1_RAND_BIT       6
+#define REG1_2COMP_BIT      5
+#define REG1_SLEEP_BIT      4
+#define REG1_NAP2_BIT       3
+#define REG1_NAP1_BIT       0
+
+#define ADC_REG_A2          0x02
+#define REG2_ILVDS2_BIT     7
+#define REG2_ILVDS1_BIT     6
+#define REG2_ILVDS0_BIT     5
+#define REG2_TERMON_BIT     4
+#define REG2_OUTOFF_BIT     3
+#define REG2_OUTMODE2_BIT   2
+#define REG2_OUTMODE1_BIT   1
+#define REG2_OUTMODE0_BIT   0
+
+#define ADC_REG_A3          0x03
+#define REG3_OUTTEST_BIT    7
+
+#define ADC_REG_A4      0x04
+
+int SpiConfig(XSpi *SpiInstancePtr, u16 SpiDeviceId);
+
+void CrudeDelay(int num);
+static XSpi  SpiInstance;
+
+u8 ReadBuffer[BUFFER_SIZE];
+u8 WriteBuffer[BUFFER_SIZE];
+u16 data;
+
+XGpio Gpio;
+
+int main()
+{
+    init_platform();
+    int Status = SpiConfig(&SpiInstance, SPI_DEVICE_ID);
+
+    if (Status != XST_SUCCESS) {
+    	xil_printf("SPI configuration failed \n");
+    }
+
+    Status = XGpio_Initialize(&Gpio, GPIO_EXAMPLE_DEVICE_ID);
+	if (Status != XST_SUCCESS) {
+		xil_printf("Gpio Initialization Failed\r\n");
+		return XST_FAILURE;
+	}
+
+	XGpio_SetDataDirection(&Gpio, 1, 0);
+
+	//select slave bit0 = 1 means that slave0 was selected
+	XSpi_SetSlaveSelect(&SpiInstance, 0x01);
+	WriteBuffer[0] = (1<<REG0_RESET_BIT);  //set bit7 of reg0 to 1 in order to reset ADC
+	WriteBuffer[1] = ADC_REG_A0;           //Write to reg0
+	XSpi_Transfer(&SpiInstance, WriteBuffer, NULL, BUFFER_SIZE);
+	CrudeDelay(1000);
+
+	XSpi_SetSlaveSelect(&SpiInstance, 0x01);
+	WriteBuffer[0] = (1<<REG2_OUTMODE2_BIT) | (1 << 1) |(1<<REG2_OUTMODE0_BIT);  //config adc to 1 lane 14bits serialization
+	WriteBuffer[0] |= (1<<REG2_OUTOFF_BIT);                            //Turn off LVDS output
+	WriteBuffer[1] = ADC_REG_A2;                                       //Write to reg2
+	XSpi_Transfer(&SpiInstance, WriteBuffer, NULL, BUFFER_SIZE);
+	CrudeDelay(1000);
+
+	XSpi_SetSlaveSelect(&SpiInstance, 0x01);
+	WriteBuffer[0] = 0x55;                                             //set 8 LSB of output test pattern to 0x7F
+	WriteBuffer[1] = ADC_REG_A4;                                        //Write to reg4
+	XSpi_Transfer(&SpiInstance, WriteBuffer, NULL, BUFFER_SIZE);
+	CrudeDelay(1000);
+
+	XSpi_SetSlaveSelect(&SpiInstance, 0x01);
+	WriteBuffer[0] = 0x84;//(1 << REG3_OUTTEST_BIT);                          //turn on output test pattern
+	WriteBuffer[1] = ADC_REG_A3;                                       //Write to reg3
+	XSpi_Transfer(&SpiInstance, WriteBuffer, NULL, BUFFER_SIZE);
+
+
+	CrudeDelay(1000);
+
+	XSpi_SetSlaveSelect(&SpiInstance, 0x01);
+	WriteBuffer[0] = (1<<REG2_OUTMODE2_BIT) | (1<<REG2_OUTMODE0_BIT);  //config adc to 1 lane 14bits serialization
+	WriteBuffer[1] = ADC_REG_A2;                                       //Write to reg2
+	XSpi_Transfer(&SpiInstance, WriteBuffer, NULL, BUFFER_SIZE);
+
+	XGpio_DiscreteWrite(&Gpio, 1, 1);
+	CrudeDelay(100000);
+	XGpio_DiscreteWrite(&Gpio, 1, 0);
+	CrudeDelay(1000);
+
+	/*while(1){
+		WriteBuffer[0] = 0x00;
+		WriteBuffer[1] = (1 << 7);
+		WriteBuffer[1] |= ADC_REG_A4;
+		XSpi_Transfer(&SpiInstance, WriteBuffer, ReadBuffer, BUFFER_SIZE);
+		data = ReadBuffer[1];
+		data = (data << 8);
+		data |= ReadBuffer[0];
+		CrudeDelay(10000);
+	}*/
+
+    cleanup_platform();
+    return 0;
+}
+
+
+
+
+int SpiConfig(XSpi *SpiInstancePtr, u16 SpiDeviceId)
+{
+	int Status;
+
+	XSpi_Config *ConfigPtr;	/* Pointer to Configuration data */
+
+	ConfigPtr = XSpi_LookupConfig(SpiDeviceId);
+	if (ConfigPtr == NULL) {
+		xil_printf("Device Not Found");
+	}
+	XSpi_Initialize(SpiInstancePtr, SpiDeviceId);
+
+	Status = XSpi_CfgInitialize(SpiInstancePtr, ConfigPtr, ConfigPtr->BaseAddress);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+	XSpi_Reset(SpiInstancePtr);
+
+	Status = XSpi_SetOptions(SpiInstancePtr, XSP_MASTER_OPTION | XSP_MANUAL_SSELECT_OPTION |XSP_CLK_ACTIVE_LOW_OPTION);
+	if (Status != XST_SUCCESS) {
+		return XST_FAILURE;
+	}
+
+	XSpi_Start(SpiInstancePtr);
+
+	XSpi_IntrGlobalDisable(SpiInstancePtr);
+	xil_printf("%d",XSpi_GetStatusReg(SpiInstancePtr));
+
+	return XST_SUCCESS;
+}
+
+void CrudeDelay(int num){
+	for (int i = 0; i < num; i++) {
+	        // Do nothing; this loop introduces a delay
+	}
+}

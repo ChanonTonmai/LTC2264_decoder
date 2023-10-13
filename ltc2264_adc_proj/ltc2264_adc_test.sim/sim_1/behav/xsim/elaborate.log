@@ -1,0 +1,23 @@
+Vivado Simulator 2020.1
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto a59e3cd333834e9eb4df4f1db325403c --incr --debug typical --relax --mt 2 -L xil_defaultlib -L xilinx_vip -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot tb_ser2par_behav xil_defaultlib.tb_ser2par xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package unisim.vcomponents
+Compiling package ieee.vital_timing
+Compiling package ieee.vital_primitives
+Compiling package unisim.vpkg
+Compiling module xil_defaultlib.glbl
+Compiling architecture iddr_v of entity unisim.IDDR [\IDDR(ddr_clk_edge="SAME_EDGE_PI...]
+Compiling architecture rtl of entity xil_defaultlib.tsc_ser2par [tsc_ser2par_default]
+Compiling architecture sim of entity xil_defaultlib.tb_ser2par
+Built simulation snapshot tb_ser2par_behav
